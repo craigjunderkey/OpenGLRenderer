@@ -1,0 +1,14 @@
+{
+    "sprite_textures": [
+        "Content/SpriteTextures/*.png"
+    ],
+    "mesh_textures": [
+        "Content/MeshTextures/*.png"
+    ],
+    "shaders": [
+        "Content/*.glsl"
+    ],
+    "shader_effects": [
+        "Content/*.effect"
+    ]
+}

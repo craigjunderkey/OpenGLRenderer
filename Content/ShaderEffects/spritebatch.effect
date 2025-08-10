@@ -1,0 +1,4 @@
+{
+    "vertex": "spritebatch.vert",
+    "fragment": "spritebatch.frag"
+}

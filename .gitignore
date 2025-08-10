@@ -1,0 +1,17 @@
+x64/
+Debug/
+Release/
+*.obj
+*.pdb
+*.exe
+*.lib
+*.dll
+.vs/
+*.vcxproj*
+*.suo
+*.ipch
+*.log
+*.tlog
+
+# engine specific stuff
+*.atlas*
