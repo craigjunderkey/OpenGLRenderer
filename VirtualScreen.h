@@ -6,17 +6,20 @@
 #include "ShaderProgram.h"
 #include "Mesh.h"
 #include "Color.h"
+#include "ShaderEffect.h"
+#include "ShaderEffectCache.h"
 
 namespace Graphics
 {
 	class VirtualScreen
 	{
 	public:
-		VirtualScreen(const Window& parentWindow, u32 width, u32 height);
+		VirtualScreen(const Window& parentWindow, AssetManagement::ShaderEffectCache& effectCache, const char* defaultEffect, u32 width, u32 height);
 		~VirtualScreen();
 		void begin();
 		void end();
 		void setBackgroundColor(Common::ColorRgba color);
+		void setEffect(const char* effect);
 		u32 width() const { return this->width_; }
 		u32 height() const { return this->height_; }
 
@@ -27,11 +30,11 @@ namespace Graphics
 		FrameBufferObject fbo_;
 		Texture colorAttachment_;
 		RenderBufferObject depthStencilAttachment_;
-		ShaderProgram shaderProgram_;
+		AssetManagement::ShaderEffectCache& fxCache_;
+		ShaderEffect* shaderEffect_;
 		Mesh screenQuad_;
 		Common::ColorRgba backgroundColor_;
 
 		Mesh createScreenQuad();
-		ShaderProgram createShaderProgram(Texture::Unit textureUnit);
 	};
 }

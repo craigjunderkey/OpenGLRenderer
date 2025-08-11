@@ -60,7 +60,7 @@ void RenderContext::addSpriteBatch(const char* defaultEffect, u32 maxObjects)
 
 VirtualScreen* RenderContext::createVirtualScreen(Window& parentWindow, u32 virtualWidth, u32 virtualHeight)
 {
-	return new VirtualScreen(this->window_, virtualWidth, virtualHeight);
+	return new VirtualScreen(this->window_, this->contentManager_.fx(), "virtual_screen", virtualWidth, virtualHeight);
 }
 
 void RenderContext::render()
@@ -93,4 +93,9 @@ void RenderContext::initializeRenderer()
 void RenderContext::setBackgroundColor(Common::ColorRgba color)
 {
 	this->virtualScreen_->setBackgroundColor(color);
+}
+
+void RenderContext::setScreenEffect(const char* effect)
+{
+	this->virtualScreen_->setEffect(effect);
 }

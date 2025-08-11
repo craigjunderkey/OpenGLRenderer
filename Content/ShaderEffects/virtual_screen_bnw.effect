@@ -1,0 +1,4 @@
+{
+    "vertex": "virtual_screen.vert",
+    "fragment": "virtual_screen_bnw.frag"
+}

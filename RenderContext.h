@@ -25,6 +25,7 @@ namespace Graphics
 		void addScene3D(u32 maxObjects = Scene3D::DEFAULT_MAX_OBJECTS);
 		void addSpriteBatch(const char* defaultEffect = "spritebatch", u32 maxObjects = SpriteBatch::DEFAULT_MAX_OBJECTS);
 		void setBackgroundColor(Common::ColorRgba color);
+		void setScreenEffect(const char* effect);
 
 		static void initializeRenderer();
 

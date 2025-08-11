@@ -8,8 +8,9 @@
 
 using namespace Graphics;
 using namespace Common;
+using namespace AssetManagement;
 
-VirtualScreen::VirtualScreen(const Window& parentWindow, u32 width, u32 height)
+VirtualScreen::VirtualScreen(const Window& parentWindow, ShaderEffectCache& effectCache, const char* defaultEffect, u32 width, u32 height)
 	: parentWindow_(parentWindow),
 	width_(width),
 	height_(height),
@@ -17,12 +18,15 @@ VirtualScreen::VirtualScreen(const Window& parentWindow, u32 width, u32 height)
 	colorAttachment_(Texture(nullptr, width, height, GlImageFormat::Rgba, Texture::Unit::Attachment)),
 	depthStencilAttachment_(RenderBufferObject(GlImageFormat::Depth24Stencil8, width, height)),
 	screenQuad_(createScreenQuad()),
-	shaderProgram_(createShaderProgram(Texture::Unit::Attachment)),
-	backgroundColor_(ColorRgba(1.0f))
+	backgroundColor_(ColorRgba(1.0f)),
+	fxCache_(effectCache),
+	shaderEffect_(&fxCache_.getEffect(defaultEffect))
 {
 	fbo_.attach(colorAttachment_, FrameBufferObject::AttachmentType::Color);
 	fbo_.attach(depthStencilAttachment_, FrameBufferObject::AttachmentType::DepthStencil);
 	ErrorReporter::panicElse(fbo_.isComplete(), "FBO in VirtualScreen is not complete.");
+
+	shaderEffect_->uniforms().set("screenTexture", Texture::Unit::Attachment);
 }
 
 VirtualScreen::~VirtualScreen()
@@ -46,7 +50,7 @@ void VirtualScreen::end()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// draw our FBO's color attachment to a screen-sized quad
-	this->shaderProgram_.use();
+	this->shaderEffect_->program_.use();
 	this->screenQuad_.bind();
 	this->colorAttachment_.bind();
 	glDisable(GL_DEPTH_TEST);
@@ -56,6 +60,12 @@ void VirtualScreen::end()
 void VirtualScreen::setBackgroundColor(ColorRgba color)
 {
 	this->backgroundColor_ = color;
+}
+
+void VirtualScreen::setEffect(const char* effect)
+{
+	this->shaderEffect_ = &this->fxCache_.getEffect(effect);
+	this->shaderEffect_->uniforms().set("screenTexture", Texture::Unit::Attachment);
 }
 
 Mesh VirtualScreen::createScreenQuad()
@@ -73,24 +83,4 @@ Mesh VirtualScreen::createScreenQuad()
 	};
 	
 	return Mesh(vertices, sizeof(vertices), indices, 6, *VertexAttributeSets::POSITION2D_UV);
-}
-
-ShaderProgram VirtualScreen::createShaderProgram(Texture::Unit textureUnit)
-{
-	ShaderProgram program = ShaderProgram();
-
-	Shader vertex = Shader::fromFile("Shaders/virtual_screen_vert.glsl", Shader::Type::Vertex);
-	GlErrorChecker::checkShader(vertex);
-
-	Shader fragment = Shader::fromFile("Shaders/virtual_screen_frag.glsl", Shader::Type::Fragment);
-	GlErrorChecker::checkShader(fragment);
-
-	program.attachShader(vertex);
-	program.attachShader(fragment);
-	program.link();
-	GlErrorChecker::checkProgram(program);
-
-	this->shaderProgram_.uniforms().set("screenTexture", textureUnit);
-
-	return program;
 }

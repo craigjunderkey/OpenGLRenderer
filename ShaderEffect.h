@@ -11,6 +11,7 @@ namespace Graphics
 	{
 		friend class SpriteBatch;
 		friend class Scene3D;
+		friend class VirtualScreen;
 	
 	public:
 		ShaderEffect(const AssetManagement::ShaderCache& cache, i32 vertex, i32 geometry, i32 fragment, i32 tessControl, i32 tessEval);
