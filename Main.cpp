@@ -18,6 +18,7 @@
 #include "RenderContext.h"
 #include "ContentManager.h"
 #include "UniformCommandBlock.h"
+#include "Locator.h"
 
 using namespace Graphics;
 using namespace Common;
@@ -40,6 +41,9 @@ int main()
 	// create window
 	Window window(800, 600, "Joyous is he who murders and eats people.");
 	RenderContext::initializeRenderer();
+
+	// initialize services
+	Locator::initialize();
 
 	// load content
 	ContentManager contentManager = ContentManager(true);

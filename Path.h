@@ -19,6 +19,7 @@ namespace Common
 		bool hasParentDirectory();
 		String extension();
 		bool hasExtension();
+		bool extensionMatches(const char* extension);
 		String fullExtension();
 
 	private:

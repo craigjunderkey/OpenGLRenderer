@@ -74,6 +74,14 @@ bool Path::hasExtension()
 	return this->contains('.');
 }
 
+bool Path::extensionMatches(const char* extension)
+{
+	const char* start = findLast('.');
+	assert(start != nullptr);
+	start++;
+	return strcmp(start, extension) == 0;
+}
+
 String Path::fullExtension()
 {
 	const char* start = findFirst('.');
