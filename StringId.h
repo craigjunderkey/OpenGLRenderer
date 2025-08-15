@@ -24,7 +24,7 @@ inline bool operator==(StringId first, StringId other)
 	return first.id == other.id;
 }
 
-inline constexpr u32 operator""_sid(const char* str, size_t size)
+extern inline constexpr u32 operator""_sid(const char* str, size_t size)
 {
 	return hashCrc32(str, size);
 }
