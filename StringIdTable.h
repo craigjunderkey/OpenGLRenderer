@@ -1,4 +1,5 @@
 #pragma once
+#include <new>
 #include "StringId.h"
 
 namespace Common
@@ -11,21 +12,13 @@ namespace Common
 			: capacity_(capacity), size_(0)
 		{
 			// let the record show that this is some of the worst syntax I've ever seen
-			this->buckets_ = static_cast<Bucket*>(::operator new[](capacity_ * sizeof(Bucket)));
+			this->buckets_ = static_cast<Bucket*>(
+				::operator new[](
+					capacity_ * sizeof(Bucket),
+					std::align_val_t(alignof(Bucket)) // pass the requirement for Bucket's byte alignment
+					)
+				);
 			this->control_ = new BucketMetadata[capacity];
-		}
-
-		~StringIdTable()
-		{
-			// call everybody's destructor
-			for (u32 i = 0; i < this->capacity_; i++)
-			{
-				if (this->control_[i].is(BucketMetadata::State::Full))
-					this->buckets_[i].~Bucket();
-			}
-
-			::operator delete[](buckets_);
-			delete[] control_;
 		}
 
 	private:
@@ -109,6 +102,15 @@ namespace Common
 			return SearchResult();
 		}
 
+		void destroyValues()
+		{
+			for (u32 i = 0; i < this->capacity_; i++)
+			{
+				if (this->control_[i].is(BucketMetadata::State::Full))
+					this->buckets_[i].~Bucket();
+			}
+		}
+
 	public:
 		// public methods zone
 		void add(StringId stringId, V value)
@@ -161,14 +163,22 @@ namespace Common
 		void clear()
 		{
 			// call everybody's destructor
-			for (u32 i = 0; i < this->capacity_; i++)
-			{
-				if (this->control_[i].is(BucketMetadata::State::Full))
-					this->buckets_[i].~Bucket();
-			}
+			destroyValues();
 
 			// set all the metadata to Empty
 			memset(this->control_, 0, this->capacity_);
+		}
+
+		~StringIdTable()
+		{
+			destroyValues();
+			
+			::operator delete[](
+				buckets_,
+				std::align_val_t(alignof(Bucket))
+			);
+
+			delete[] control_;
 		}
 	};
 }
