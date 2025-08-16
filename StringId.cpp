@@ -25,5 +25,9 @@ StringId internString(const char* string)
 
 const char* lookupString(StringId sid)
 {
-	return *table.get(sid);
+	const char** string = table.get(sid);
+	if (string == nullptr)
+		return nullptr;
+	else
+		return *string;
 }
