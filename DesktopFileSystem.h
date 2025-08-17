@@ -6,9 +6,9 @@ namespace Common
 	class DesktopFileSystem : public FileSystem
 	{
 	public:
-		virtual std::vector<Path> getFilesInImmediateDirectory(Path directory) override;
-		virtual std::vector<Path> getFilesInDirectory(Path directory) override;
-		virtual std::vector<Path> getFilesInDirectory(Path directory, const char* extension) override;
-		virtual bool fileExists(Path file) override;
+		virtual std::vector<Path> getFilesInImmediateDirectory(const Path& directory) override;
+		virtual std::vector<Path> getFilesInDirectory(const Path& directory) override;
+		virtual std::vector<Path> getFilesInDirectory(const Path& directory, const char* extension) override;
+		virtual bool fileExists(const Path& file) override;
 	};
 }

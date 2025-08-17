@@ -1,6 +1,7 @@
 #pragma once
 #include <cstring>
 #include <iostream>
+#include <optional>
 #include "Types.h"
 #include "String.h"
 
@@ -10,26 +11,35 @@ namespace Common
 	{
 	public:
 		Path(const char* path);
-		~Path();
 		
-		const char* path() const { return this->path_; }
+		const String& path() const { return this->path_; }
 		
-		String name();
-		Path parentDirectory();
-		bool hasParentDirectory();
-		String extension();
-		bool hasExtension();
-		bool extensionMatches(const char* extension);
-		String fullExtension();
+		String name() const;
+		Path parentDirectory() const;
+		bool hasParentDirectory() const;
+		String extension() const;
+		bool hasExtension() const;
+		bool extensionMatches(const char* extension) const;
+		String fullExtension() const;
 
+		bool isPattern() const;
+		PathPattern getPattern() const;
+	
 	private:
-		const char* findFirst(char toFind) const;
-		const char* findLast(char toFind) const;
-		bool contains(char toFind) const;
-		String substring(i32 start, i32 size) const;
-		String substring(const char* start, i32 size) const;
+		String path_;
 
-		const char* path_;
+		Path(String&& path);
+		String makeFormattedPath(const char* path);
+	};
+
+	struct PathPattern
+	{
+		PathPattern(Path&& directory, std::optional<String>&& extension)
+			: directory(std::move(directory)), extension(std::move(extension)) {
+		}
+
+		Path directory;
+		std::optional<String> extension;
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const Path& path)

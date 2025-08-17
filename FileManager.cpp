@@ -1,7 +1,9 @@
 #include <fstream>
+#include <cstring>
 #include "FileManager.h"
 #include "json.hpp"
 #include "ErrorReporter.h"
+#include "Locator.h"
 
 using json = nlohmann::json;
 
@@ -25,36 +27,34 @@ std::string FileManager::getAtlasMetaDataPath(const std::string& atlasName)
 	return CONTENT_DIRECTORY + atlasName + ".atlas";
 }
 
-std::vector<std::string> FileManager::getAllFilesFromModule(const std::string& moduleName)
+std::vector<Path> FileManager::getAllFilesFromModule(const std::string& moduleName)
 {
 	std::ifstream file = std::ifstream(FileManager::LOAD_PATH);
 	json data = json::parse(file);
-	std::vector<std::string> filePaths;
+	std::vector<Path> filePaths;
 
 	for (auto& element : data[moduleName])
 	{
-		std::string path = (std::string)element;
-		size_t asterisk = path.find('*');
+		Path path = Path(static_cast<std::string>(element).data());
 		
-		if (asterisk != std::string::npos)
+		if (path.isPattern())
 		{
-			ErrorReporter::panicElse(
-				asterisk > 0 && path[asterisk - 1] == '/',
-				"* must appear after a /: \"" + path + "\".");
-
-			if (asterisk == path.size() - 1)
+			PathPattern pattern = path.getPattern();
+			
+			if (!pattern.extension.has_value())
 			{
 				// * appears at the end, so simply include all files in this directory
-				std::string directory = path.substr(0, path.length() - 2); // strip the /*
-				std::vector<std::string> filesFound = std::move(getAllFilesFromDirectory(directory));
+				std::vector<Path> filesFound = std::move(
+					Locator::fileSystem().getFilesInDirectory(pattern.directory)
+				);
 				filePaths.insert(filePaths.end(), filesFound.begin(), filesFound.end());
 			}
 			else
 			{
 				// * appears before a file extension, so include all files of this extension
-				std::string directory = path.substr(0, asterisk - 1);
-				std::string extension = path.substr(asterisk + 1, path.length() - asterisk);
-				std::vector<std::string> filesFound = std::move(getAllFilesFromDirectory(directory, extension));
+				std::vector<Path> filesFound = std::move(
+					Locator::fileSystem().getFilesInDirectory(pattern.directory, pattern.extension.value().data())
+				);
 				filePaths.insert(filePaths.end(), filesFound.begin(), filesFound.end());
 			}
 		}
@@ -67,6 +67,7 @@ std::vector<std::string> FileManager::getAllFilesFromModule(const std::string& m
 	return filePaths;
 }
 
+/*
 std::vector<std::string> FileManager::getAllFilesFromDirectory(const std::string& directory)
 {
 	std::vector<std::string> filePaths;
@@ -111,3 +112,4 @@ void FileManager::stripExtension(std::string& path)
 	if (extensionIndex != std::string::npos)
 		path = std::move(path.substr(0, extensionIndex));
 }
+*/

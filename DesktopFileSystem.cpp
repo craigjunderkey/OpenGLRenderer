@@ -3,11 +3,11 @@
 
 using namespace Common;
 
-std::vector<Path> DesktopFileSystem::getFilesInImmediateDirectory(Path directory)
+std::vector<Path> DesktopFileSystem::getFilesInImmediateDirectory(const Path& directory)
 {
 	std::vector<Path> filePaths;
 
-	for (const auto& entry : std::filesystem::directory_iterator(directory.path()))
+	for (const auto& entry : std::filesystem::directory_iterator(directory.path().data()))
 	{
 		filePaths.push_back(Path(entry.path().generic_string().data()));
 	}
@@ -15,11 +15,11 @@ std::vector<Path> DesktopFileSystem::getFilesInImmediateDirectory(Path directory
 	return filePaths;
 }
 
-std::vector<Path> DesktopFileSystem::getFilesInDirectory(Path directory)
+std::vector<Path> DesktopFileSystem::getFilesInDirectory(const Path& directory)
 {
 	std::vector<Path> filePaths;
 
-	for (const auto& entry : std::filesystem::recursive_directory_iterator(directory.path()))
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(directory.path().data()))
 	{
 		filePaths.push_back(Path(entry.path().generic_string().data()));
 	}
@@ -27,11 +27,11 @@ std::vector<Path> DesktopFileSystem::getFilesInDirectory(Path directory)
 	return filePaths;
 }
 
-std::vector<Path> DesktopFileSystem::getFilesInDirectory(Path directory, const char* extension)
+std::vector<Path> DesktopFileSystem::getFilesInDirectory(const Path& directory, const char* extension)
 {
 	std::vector<Path> filePaths;
 
-	for (const auto& entry : std::filesystem::recursive_directory_iterator(directory.path()))
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(directory.path().data()))
 	{
 		Path path = Path(entry.path().generic_string().data());
 		if (path.extensionMatches(extension))
@@ -41,7 +41,7 @@ std::vector<Path> DesktopFileSystem::getFilesInDirectory(Path directory, const c
 	return filePaths;
 }
 
-bool DesktopFileSystem::fileExists(Path file)
+bool DesktopFileSystem::fileExists(const Path& file)
 {
-	return std::filesystem::exists(file.path());
+	return std::filesystem::exists(file.path().data());
 }

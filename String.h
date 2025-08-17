@@ -19,17 +19,21 @@ namespace Common
 		
 		~String();
 
-		const char* data() { return this->text_; }
+		const char* data() const { return this->text_; }
 		u32 length() const { return strlen(this->text_); }
 
 		String(const String& other) = delete;
 		String& operator=(const String& other) = delete;
+
+		char operator[](i32 index) const;
 
 		String makeSubstring(u32 start, u32 length) const;
 		String makeSubstringFromAddress(const char* start, u32 length) const;
 		std::string_view view() const;
 		const char* findFirst(char toFind) const;
 		const char* findLast(char toFind) const;
+		i32 findFirstIndex(char toFind) const;
+		i32 findLastIndex(char toFind) const;
 		bool contains(char toFind) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const String& string);

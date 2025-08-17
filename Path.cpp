@@ -3,6 +3,16 @@
 using namespace Common;
 
 Path::Path(const char* path)
+	: path_(makeFormattedPath(path))
+{
+}
+
+Path::Path(String&& path)
+	: path_(std::move(path))
+{
+}
+
+String Path::makeFormattedPath(const char* path)
 {
 	u32 length = strlen(path);
 	char* formattedPath = new char[length + 1];
@@ -16,135 +26,98 @@ Path::Path(const char* path)
 		}
 	}
 
-	this->path_ = formattedPath;
+	return String::makeOwner(formattedPath);
 }
 
-Path::~Path()
+String Path::name() const
 {
-	delete this->path_;
-}
-
-String Path::name()
-{
-	const char* nameStart = findFirst('/');
-	const char* nameEnd = findLast('.');
+	const char* nameStart = path_.findFirst('/');
+	const char* nameEnd = path_.findLast('.');
 
 	if (nameStart == nullptr)
-		nameStart = this->path_;
+		nameStart = path_.data();
 	else
 		nameStart++; // move past /
 
 	if (nameEnd == nullptr)
-		nameEnd = this->path_ + strlen(this->path_);
+		nameEnd = path_.data() + path_.length();
 
 	i32 size = nameEnd - nameStart;
-	return substring(nameStart, size);
+	return path_.makeSubstringFromAddress(nameStart, size);
 }
 
-Path Path::parentDirectory()
+Path Path::parentDirectory() const
 {
-	const char* dir = findLast('/');
+	const char* dir = path_.findLast('/');
 
 	assert(dir != nullptr);
 
-	i32 size = dir - this->path_;
-	return Path(substring(0, size).text);
+	i32 size = dir - path_.data();
+	return Path(path_.makeSubstring(0, size));
 }
 
-bool Path::hasParentDirectory()
+bool Path::hasParentDirectory() const
 {
-	return this->contains('/');
+	return path_.contains('/');
 }
 
-String Path::extension()
+String Path::extension() const
 {
-	const char* start = findLast('.');
+	const char* start = path_.findLast('.');
 
 	assert(start != nullptr);
 	
 	start++; // move past .
 
-	const char* end = this->path_ + strlen(this->path_);
+	const char* end = this->path_.data() + this->path_.length();
 	i32 size = end - start;
-	return substring(start, size);
+	return path_.makeSubstringFromAddress(start, size);
 }
 
-bool Path::hasExtension()
+bool Path::hasExtension() const
 {
-	return this->contains('.');
+	return path_.contains('.');
 }
 
-bool Path::extensionMatches(const char* extension)
+bool Path::extensionMatches(const char* extension) const
 {
-	const char* start = findLast('.');
+	const char* start = path_.findLast('.');
 	assert(start != nullptr);
 	start++;
 	return strcmp(start, extension) == 0;
 }
 
-String Path::fullExtension()
+String Path::fullExtension() const
 {
-	const char* start = findFirst('.');
+	const char* start = path_.findFirst('.');
 
 	assert(start != nullptr);
 
 	start++; // move past .
 
-	const char* end = this->path_ + strlen(this->path_);
+	const char* end = path_.data() + path_.length();
 	i32 size = end - start;
-	return substring(start, size);
+	return path_.makeSubstringFromAddress(start, size);
 }
 
-const char* Path::findFirst(char toFind) const
+bool Path::isPattern() const
 {
-	const char* current = this->path_;
+	return path_.contains('*');
+}
 
-	while (*current != '\0')
+PathPattern Path::getPattern() const
+{
+	assert(this->isPattern(), "Tried to get pattern but this is not a pattern.");
+	assert(this->hasParentDirectory(), "Patterns must start with a directory.");
+	assert(path_[path_.findLastIndex('*') - 1] == '/', "Patterns must immediately follow a /.");
+
+	Path directory = this->parentDirectory();
+	
+	std::optional<String> extension;
+	if (this->hasExtension())
 	{
-		if (*current == toFind)
-		{
-			return current;
-		}
-		else
-		{
-			current++;
-		}
+		extension.emplace(this->fullExtension());
 	}
 
-	return nullptr;
-}
-
-const char* Path::findLast(char toFind) const
-{
-	const char* current = this->path_ + strlen(this->path_);
-	const char* start = this->path_;
-
-	while (current != start)
-	{
-		if (*current == toFind)
-		{
-			return current;
-		}
-		else
-		{
-			current--;
-		}
-	}
-
-	return nullptr;
-}
-
-bool Path::contains(char toFind) const
-{
-	return findFirst(toFind) != nullptr;
-}
-
-String Path::substring(i32 start, i32 size) const
-{
-	return String(this->path_ + start, size);
-}
-
-String Path::substring(const char* start, i32 size) const
-{
-	return String(start, size);
+	return PathPattern(std::move(directory), std::move(extension));
 }

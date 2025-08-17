@@ -84,6 +84,26 @@ const char* String::findFirst(char toFind) const
 	return nullptr;
 }
 
+i32 String::findFirstIndex(char toFind) const
+{
+	const char* found = findFirst(toFind);
+
+	if (found == nullptr)
+		return -1;
+	else
+		return static_cast<i32>(found - text_);
+}
+
+i32 String::findLastIndex(char toFind) const
+{
+	const char* found = findLast(toFind);
+
+	if (found == nullptr)
+		return -1;
+	else
+		return static_cast<i32>(found - text_);
+}
+
 const char* String::findLast(char toFind) const
 {
 	const char* current = this->text_ + strlen(this->text_);
@@ -107,4 +127,10 @@ const char* String::findLast(char toFind) const
 bool String::contains(char toFind) const
 {
 	return findFirst(toFind) != nullptr;
+}
+
+char String::operator[](i32 index) const
+{
+	assert(index < this->length());
+	return this->text_[index];
 }
