@@ -9,16 +9,16 @@ namespace AssetManagement
 	class FileManager
 	{
 	public:
-		static const std::string& SPRITE_ATLAS;
-		static const std::string& MESH_ATLAS;
-		static const std::string& SHADERS;
-		static const std::string& SHADER_EFFECTS;
-		static const std::string& CONTENT_DIRECTORY;
-		static const std::string& LOAD_PATH;
+		static const char* SPRITE_ATLAS;
+		static const char* MESH_ATLAS;
+		static const char* SHADERS;
+		static const char* SHADER_EFFECTS;
+		static const char* CONTENT_DIRECTORY;
+		static const char* LOAD_PATH;
 
-		static std::string getAtlasImagePath(const std::string& atlasName);
-		static std::string getAtlasMetaDataPath(const std::string& atlasName);
-		static std::vector<Path> getAllFilesFromModule(const std::string& moduleName);
+		static Common::Path getAtlasImagePath(const char* atlasName);
+		static Common::Path getAtlasMetaDataPath(const char* atlasName);
+		static std::vector<Common::Path> getAllFilesFromModule(const char* moduleName);
 		/*
 		static std::vector<std::string> getAllFilesFromDirectory(const std::string& directory);
 		static std::vector<std::string> getAllFilesFromDirectory(const std::string& directory, const std::string& fileExtension);

@@ -1,4 +1,5 @@
 #include "Path.h"
+#include "PathPattern.h"
 
 using namespace Common;
 
@@ -10,6 +11,31 @@ Path::Path(const char* path)
 Path::Path(String&& path)
 	: path_(std::move(path))
 {
+}
+
+Path::Path()
+	: path_(String::makeEmpty())
+{
+}
+
+Path::Path(Path&& other) noexcept
+	: path_(std::move(other.path_))
+{
+}
+
+Path Path::makePreformatted(String&& path)
+{
+	return Path(std::move(path));
+}
+
+Path& Path::operator=(Path&& other) noexcept
+{
+	if (this != &other)
+	{
+		this->path_ = std::move(other.path_);
+	}
+
+	return *this;
 }
 
 String Path::makeFormattedPath(const char* path)
@@ -105,7 +131,7 @@ bool Path::isPattern() const
 	return path_.contains('*');
 }
 
-PathPattern Path::getPattern() const
+PathPattern Path::makePattern() const
 {
 	assert(this->isPattern(), "Tried to get pattern but this is not a pattern.");
 	assert(this->hasParentDirectory(), "Patterns must start with a directory.");

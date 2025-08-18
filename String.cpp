@@ -1,7 +1,5 @@
 #include "String.h"
 
-using namespace Common;
-
 String String::makeCopy(const char* text)
 {
 	u32 length = strlen(text);
@@ -18,10 +16,20 @@ String String::makeCopy(const char* text, u32 length)
 	return String(newText);
 }
 
+String String::makeCopy(const String& other)
+{
+	return String::makeCopy(other.data());
+}
+
 String String::makeOwner(const char* text)
 {
 	assert(text != nullptr);
 	return String(text);
+}
+
+String String::makeEmpty()
+{
+	return String(nullptr);
 }
 
 String::String(String&& other) noexcept
@@ -133,4 +141,31 @@ char String::operator[](i32 index) const
 {
 	assert(index < this->length());
 	return this->text_[index];
+}
+
+String String::concatenate(const char* lhs, const char* rhs)
+{
+	u32 leftLength = strlen(lhs);
+	u32 rightLength = strlen(rhs);
+	u32 length = leftLength + rightLength;
+	char* cat = new char[length + 1];
+	memcpy(cat, lhs, leftLength);
+	memcpy(cat + leftLength, rhs, rightLength);
+	cat[length] = '\0';
+	return String::makeOwner(cat);
+}
+
+String operator+(const String& lhs, const String& rhs)
+{
+	return String::concatenate(lhs.data(), rhs.data());
+}
+
+String operator+(const String& lhs, const char* rhs)
+{
+	return String::concatenate(lhs.data(), rhs);
+}
+
+String operator+(const char* lhs, const String& rhs)
+{
+	return String::concatenate(lhs, rhs.data());
 }

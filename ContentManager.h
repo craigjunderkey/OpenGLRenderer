@@ -23,8 +23,8 @@ namespace AssetManagement
 		TextureAtlas meshAtlas_;
 		ShaderEffectCache fx_;
 
-		static TextureAtlas loadTextureAtlas(std::string moduleName, Graphics::Texture::Unit textureUnit, bool forceRebuild);
-		static TextureAtlas buildTextureAtlas(std::string moduleName, Graphics::Texture::Unit textureUnit);
+		static TextureAtlas loadTextureAtlas(const char* moduleName, Graphics::Texture::Unit textureUnit, bool forceRebuild);
+		static TextureAtlas buildTextureAtlas(const char* moduleName, Graphics::Texture::Unit textureUnit);
 		static ShaderCache buildShaderCache();
 		static ShaderEffectCache buildFxCache();
 	};

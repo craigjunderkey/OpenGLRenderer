@@ -6,6 +6,6 @@ namespace AssetManagement
 	class TextureUnpacker
 	{
 	public:
-		static TextureAtlas importAtlas(const std::string& moduleName, Graphics::Texture::Unit textureUnit);
+		static TextureAtlas importAtlas(const char* moduleName, Graphics::Texture::Unit textureUnit);
 	};
 }

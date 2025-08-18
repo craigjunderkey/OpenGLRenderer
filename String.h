@@ -4,52 +4,54 @@
 #include <string_view>
 #include "Types.h"
 
-namespace Common
+class String
 {
-	class String
-	{
-	public:
-		// TODO: allocate this memory in some special pool for strings
-		static String makeCopy(const char* text);
-		static String makeCopy(const char* text, u32 length);
-		static String makeOwner(const char* text);
+public:
+	// TODO: allocate this memory in some special pool for strings
+	static String makeCopy(const char* text);
+	static String makeCopy(const char* text, u32 length);
+	static String makeCopy(const String& other);
+	static String makeOwner(const char* text);
+	static String makeEmpty();
+	static String concatenate(const char* lhs, const char* rhs);
 
-		String(String&& other) noexcept;
-		String& operator=(String&& other) noexcept;
+	String(String&& other) noexcept;
+	String& operator=(String&& other) noexcept;
 		
-		~String();
+	~String();
 
-		const char* data() const { return this->text_; }
-		u32 length() const { return strlen(this->text_); }
+	const char* data() const { return this->text_; }
+	u32 length() const { return strlen(this->text_); }
 
-		String(const String& other) = delete;
-		String& operator=(const String& other) = delete;
+	String(const String& other) = delete;
+	String& operator=(const String& other) = delete;
 
-		char operator[](i32 index) const;
+	char operator[](i32 index) const;
 
-		String makeSubstring(u32 start, u32 length) const;
-		String makeSubstringFromAddress(const char* start, u32 length) const;
-		std::string_view view() const;
-		const char* findFirst(char toFind) const;
-		const char* findLast(char toFind) const;
-		i32 findFirstIndex(char toFind) const;
-		i32 findLastIndex(char toFind) const;
-		bool contains(char toFind) const;
+	String makeSubstring(u32 start, u32 length) const;
+	String makeSubstringFromAddress(const char* start, u32 length) const;
+	std::string_view view() const;
+	const char* findFirst(char toFind) const;
+	const char* findLast(char toFind) const;
+	i32 findFirstIndex(char toFind) const;
+	i32 findLastIndex(char toFind) const;
+	bool contains(char toFind) const;
 
-		friend std::ostream& operator<<(std::ostream& os, const String& string);
-
-	private:
-		const char* text_;
+private:
+	const char* text_;
 		
-		String(const char* text)
-		{
-			this->text_ = text;
-		}
-	};
-
-	inline std::ostream& operator<<(std::ostream& os, const String& string)
+	String(const char* text)
 	{
-		os << string.text_;
-		return os;
+		this->text_ = text;
 	}
+};
+
+inline std::ostream& operator<<(std::ostream& os, const String& string)
+{
+	os << string.data();
+	return os;
 }
+
+extern String operator+(const String& lhs, const String& rhs);
+extern String operator+(const String& lhs, const char* rhs);
+extern String operator+(const char* lhs, const String& rhs);

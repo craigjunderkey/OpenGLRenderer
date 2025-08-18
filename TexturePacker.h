@@ -1,21 +1,21 @@
 #pragma once
 #include <vector>
-#include <string>
 #include "Texture.h"
 #include "TextureAtlas.h"
 #include "Image.h"
 #include "Rectangle.h"
 #include "Types.h"
+#include "Path.h"
 
 namespace AssetManagement
 {
 	class TexturePacker
 	{
 	public:
-		static TextureAtlas pack(const std::vector<std::string>& filePaths, Graphics::Texture::Unit unit, const std::string& name, bool exportOnCompletion);
+		static TextureAtlas pack(const std::vector<Path>& filePaths, Graphics::Texture::Unit unit, const std::string& name, bool exportOnCompletion);
 	
 	private:
-		static const u32 INTERVAL = 64;
+		static const u32 INTERVAL = 128;
 		
 		struct TexData
 		{

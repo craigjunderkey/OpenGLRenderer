@@ -7,11 +7,18 @@
 
 namespace Common
 {
+	struct PathPattern;
+	
 	class Path
 	{
 	public:
 		Path(const char* path);
+		Path();
 		
+		Path(Path&& other) noexcept;
+		Path& operator=(Path&& other) noexcept;
+		static Path makePreformatted(String&& path);
+
 		const String& path() const { return this->path_; }
 		
 		String name() const;
@@ -23,23 +30,13 @@ namespace Common
 		String fullExtension() const;
 
 		bool isPattern() const;
-		PathPattern getPattern() const;
+		PathPattern makePattern() const;
 	
 	private:
 		String path_;
 
 		Path(String&& path);
 		String makeFormattedPath(const char* path);
-	};
-
-	struct PathPattern
-	{
-		PathPattern(Path&& directory, std::optional<String>&& extension)
-			: directory(std::move(directory)), extension(std::move(extension)) {
-		}
-
-		Path directory;
-		std::optional<String> extension;
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const Path& path)

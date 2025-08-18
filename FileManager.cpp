@@ -4,30 +4,35 @@
 #include "json.hpp"
 #include "ErrorReporter.h"
 #include "Locator.h"
+#include "PathPattern.h"
 
 using json = nlohmann::json;
 
 using namespace AssetManagement;
 using namespace Common;
 
-const std::string& FileManager::SPRITE_ATLAS = "sprite_textures";
-const std::string& FileManager::MESH_ATLAS = "mesh_textures";
-const std::string& FileManager::SHADERS = "shaders";
-const std::string& FileManager::SHADER_EFFECTS = "shader_effects";
-const std::string& FileManager::CONTENT_DIRECTORY = "Content/";
-const std::string& FileManager::LOAD_PATH = CONTENT_DIRECTORY + "load.json";
+const char* FileManager::SPRITE_ATLAS = "sprite_textures";
+const char* FileManager::MESH_ATLAS = "mesh_textures";
+const char* FileManager::SHADERS = "shaders";
+const char* FileManager::SHADER_EFFECTS = "shader_effects";
+const char* FileManager::CONTENT_DIRECTORY = "Content/";
+const char* FileManager::LOAD_PATH = "Content/load.json";
 
-std::string FileManager::getAtlasImagePath(const std::string& atlasName)
+Path FileManager::getAtlasImagePath(const char* atlasName)
 {
-	return CONTENT_DIRECTORY + atlasName + ".atlas.png";
+	return Path::makePreformatted(std::move(
+		String::concatenate(CONTENT_DIRECTORY, atlasName) + ".atlas.png"
+	));
 }
 
-std::string FileManager::getAtlasMetaDataPath(const std::string& atlasName)
+Path FileManager::getAtlasMetaDataPath(const char* atlasName)
 {
-	return CONTENT_DIRECTORY + atlasName + ".atlas";
+	return Path::makePreformatted(std::move(
+		String::concatenate(CONTENT_DIRECTORY, atlasName) + ".atlas"
+	));
 }
 
-std::vector<Path> FileManager::getAllFilesFromModule(const std::string& moduleName)
+std::vector<Path> FileManager::getAllFilesFromModule(const char* moduleName)
 {
 	std::ifstream file = std::ifstream(FileManager::LOAD_PATH);
 	json data = json::parse(file);
@@ -39,7 +44,7 @@ std::vector<Path> FileManager::getAllFilesFromModule(const std::string& moduleNa
 		
 		if (path.isPattern())
 		{
-			PathPattern pattern = path.getPattern();
+			PathPattern pattern = path.makePattern();
 			
 			if (!pattern.extension.has_value())
 			{
