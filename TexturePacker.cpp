@@ -19,7 +19,7 @@ bool TexturePacker::compareRects(TexRect& a, TexRect& b)
 	return a.rect.size.y > b.rect.size.y;
 }
 
-TextureAtlas TexturePacker::pack(const std::vector<std::string>& filePaths, Texture::Unit unit, const std::string& name, bool exportOnCompletion)
+TextureAtlas TexturePacker::pack(const std::vector<Path>& filePaths, Texture::Unit unit, const char* name, bool exportOnCompletion)
 {
 	// load all the images
 	u32 texCount = filePaths.size();
@@ -28,11 +28,11 @@ TextureAtlas TexturePacker::pack(const std::vector<std::string>& filePaths, Text
 	data.reserve(texCount);
 	rects.reserve(texCount);
 	
-	for (const std::string& path : filePaths)
+	for (const Path& path : filePaths)
 	{
-		Image texImage = Image(path.c_str(), Image::Format::Rgba, false);
+		Image texImage = Image(path.path().data(), Image::Format::Rgba, false);
 		rects.push_back(TexRect(Rectangle(texImage.width, texImage.height), rects.size()));
-		data.push_back(TexData(std::move(texImage), getPathName(path)));
+		data.push_back(TexData(std::move(texImage), std::move(path.name())));
 	}
 
 	// sort rects by height
@@ -72,14 +72,6 @@ TextureAtlas TexturePacker::pack(const std::vector<std::string>& filePaths, Text
 	TextureAtlas atlas = createAtlas(std::move(atlasTexture), data, rects);
 	
 	return atlas;
-}
-
-std::string TexturePacker::getPathName(const std::string& path)
-{
-	std::string stripped = path;
-	FileManager::stripExtension(stripped);
-	FileManager::stripDirectory(stripped);
-	return stripped;
 }
 
 u32 TexturePacker::calculateStartingAtlasSize(const std::vector<TexRect>& rects)
@@ -184,28 +176,29 @@ TextureAtlas TexturePacker::createAtlas(Texture&& texture, const std::vector<Tex
 
 	for (const TexRect& rect : rects)
 	{
-		atlas.addTexture(data[rect.id].name, Texture2D(atlas.source_, rect.rect));
+		// FIXME: BULLSHIT!
+		atlas.addTexture(std::string(data[rect.id].name.data()), Texture2D(atlas.source_, rect.rect));
 	}
 
 	return atlas;
 }
 
-void TexturePacker::exportAtlas(const std::string& name, const Image& atlasImage, const std::vector<TexData>& data, const std::vector<TexRect>& rects)
+void TexturePacker::exportAtlas(const char* name, const Image& atlasImage, const std::vector<TexData>& data, const std::vector<TexRect>& rects)
 {
-	std::string imagePath = FileManager::getAtlasImagePath(name);
-	std::string metaDataPath = FileManager::getAtlasMetaDataPath(name);
+	Path imagePath = FileManager::getAtlasImagePath(name);
+	Path metaDataPath = FileManager::getAtlasMetaDataPath(name);
 
-	ImageWriter::write(atlasImage, imagePath.c_str());
+	ImageWriter::write(atlasImage, imagePath.path().data());
 
 	json metaData
 	{
 		{"id", name},
-		{"source", imagePath}
+		{"source", imagePath.path().data()}
 	};
 
 	for (const TexRect& rect : rects)
 	{
-		metaData["textures"][data[rect.id].name] = {
+		metaData["textures"][data[rect.id].name.data()] = {
 			rect.rect.position.x,
 			rect.rect.position.y,
 			rect.rect.size.x,
@@ -213,6 +206,6 @@ void TexturePacker::exportAtlas(const std::string& name, const Image& atlasImage
 		};
 	}
 
-	std::ofstream metaDataOut = std::ofstream(metaDataPath);
+	std::ofstream metaDataOut = std::ofstream(metaDataPath.path().data());
 	metaDataOut << std::setw(4) << metaData << std::endl;
 }

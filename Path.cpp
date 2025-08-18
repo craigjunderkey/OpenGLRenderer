@@ -126,6 +126,14 @@ String Path::fullExtension() const
 	return path_.makeSubstringFromAddress(start, size);
 }
 
+bool Path::fullExtensionMatches(const char* fullExtension) const
+{
+	const char* start = path_.findFirst('.');
+	assert(start != nullptr);
+	start++;
+	return strcmp(start, fullExtension) == 0;
+}
+
 bool Path::isPattern() const
 {
 	return path_.contains('*');

@@ -28,6 +28,7 @@ namespace Common
 		bool hasExtension() const;
 		bool extensionMatches(const char* extension) const;
 		String fullExtension() const;
+		bool fullExtensionMatches(const char* fullExtension) const;
 
 		bool isPattern() const;
 		PathPattern makePattern() const;

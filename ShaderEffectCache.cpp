@@ -10,12 +10,12 @@ using namespace Common;
 
 using json = nlohmann::json;
 
-const std::string& ShaderEffectCache::VERTEX = "vertex";
-const std::string& ShaderEffectCache::FRAGMENT = "fragment";
-const std::string& ShaderEffectCache::GEOMETRY = "geometry";
-const std::string& ShaderEffectCache::COMPUTE = "compute";
-const std::string& ShaderEffectCache::TESS_CONTROL = "tess_control";
-const std::string& ShaderEffectCache::TESS_EVAL = "tess_eval";
+const char* ShaderEffectCache::VERTEX = "vertex";
+const char* ShaderEffectCache::FRAGMENT = "fragment";
+const char* ShaderEffectCache::GEOMETRY = "geometry";
+const char* ShaderEffectCache::COMPUTE = "compute";
+const char* ShaderEffectCache::TESS_CONTROL = "tess_control";
+const char* ShaderEffectCache::TESS_EVAL = "tess_eval";
 
 ShaderEffectCache::ShaderEffectCache(size_t numFx)
 {
@@ -47,23 +47,21 @@ i32 ShaderEffectCache::getEffectIndex(const std::string& name) const
 	}
 }
 
-i32 ShaderEffectCache::cacheShaderEffect(const ShaderCache& shaders, const std::string& path)
+i32 ShaderEffectCache::cacheShaderEffect(const ShaderCache& shaders, const Path& path)
 {
 	// load effect file
 	ShaderBlock block = ShaderBlock();
-	std::ifstream effectFile = std::ifstream(path);
+	std::ifstream effectFile = std::ifstream(path.path().data());
 	json effectJson = json::parse(effectFile);
 
 	// get effect name
-	std::string name = path;
-	FileManager::stripDirectory(name);
-	FileManager::stripExtension(name);
-
+	std::string name = std::string(path.name().data());
+	
 	// fill out block with shader indices
 	for (const auto& [type, shaderName]: effectJson.items())
 	{
 		i32 shaderIndex = shaders.getShaderIndex(shaderName);
-		i32* slot = &block.vertex;  // this is bullshit;
+		i32* slot = nullptr;		// this is bullshit;
 									// just to avoid an error about possible uninitialized pointer
 		if (type == VERTEX)
 			slot = &block.vertex;

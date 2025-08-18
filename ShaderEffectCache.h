@@ -5,6 +5,7 @@
 #include "ShaderEffect.h"
 #include "Types.h"
 #include "ShaderCache.h"
+#include "Path.h"
 
 namespace AssetManagement
 {
@@ -35,15 +36,15 @@ namespace AssetManagement
 		std::vector<Graphics::ShaderEffect> fx_;
 		std::unordered_map<std::string, i32> fxNames_;
 
-		i32 cacheShaderEffect(const ShaderCache& shaders, const std::string& path);
+		i32 cacheShaderEffect(const ShaderCache& shaders, const Common::Path& path);
 		
 		static Graphics::ShaderEffect createEffectFromBlock(const ShaderCache& shaders, const ShaderBlock& block);
 
-		static const std::string& VERTEX;
-		static const std::string& FRAGMENT;
-		static const std::string& GEOMETRY;
-		static const std::string& COMPUTE;
-		static const std::string& TESS_CONTROL;
-		static const std::string& TESS_EVAL;
+		static const char* VERTEX;
+		static const char* FRAGMENT;
+		static const char* GEOMETRY;
+		static const char* COMPUTE;
+		static const char* TESS_CONTROL;
+		static const char* TESS_EVAL;
 	};
 }

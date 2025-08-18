@@ -52,7 +52,12 @@ std::vector<Path> FileManager::getAllFilesFromModule(const char* moduleName)
 				std::vector<Path> filesFound = std::move(
 					Locator::fileSystem().getFilesInDirectory(pattern.directory)
 				);
-				filePaths.insert(filePaths.end(), filesFound.begin(), filesFound.end());
+				
+				filePaths.insert(
+					filePaths.end(),
+					std::make_move_iterator(filesFound.begin()),
+					std::make_move_iterator(filesFound.end())
+				);
 			}
 			else
 			{
@@ -60,12 +65,17 @@ std::vector<Path> FileManager::getAllFilesFromModule(const char* moduleName)
 				std::vector<Path> filesFound = std::move(
 					Locator::fileSystem().getFilesInDirectory(pattern.directory, pattern.extension.value().data())
 				);
-				filePaths.insert(filePaths.end(), filesFound.begin(), filesFound.end());
+
+				filePaths.insert(
+					filePaths.end(),
+					std::make_move_iterator(filesFound.begin()),
+					std::make_move_iterator(filesFound.end())
+				);
 			}
 		}
 		else
 		{
-			filePaths.push_back(path);
+			filePaths.push_back(std::move(path));
 		}
 	}
 

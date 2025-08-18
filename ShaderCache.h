@@ -4,6 +4,7 @@
 #include <string>
 #include "Shader.h"
 #include "Types.h"
+#include "Path.h"
 
 namespace AssetManagement
 {
@@ -28,18 +29,18 @@ namespace AssetManagement
 			Graphics::Shader::Type type;
 		};
 		
-		static const std::string& VERTEX;
-		static const std::string& FRAGMENT;
-		static const std::string& GEOMETRY;
-		static const std::string& COMPUTE;
-		static const std::string& TESS_CONTROL;
-		static const std::string& TESS_EVAL;
+		static const char* VERTEX;
+		static const char* FRAGMENT;
+		static const char* GEOMETRY;
+		static const char* COMPUTE;
+		static const char* TESS_CONTROL;
+		static const char* TESS_EVAL;
 
 		std::vector<Graphics::Shader> shaders_;
 		std::unordered_map<std::string, i32> shaderNames_;
 
-		i32 cacheShader(const std::string& path);
+		i32 cacheShader(const Common::Path& path);
 		
-		static ShaderMetaData getMetaData(const std::string& path);
+		static ShaderMetaData getMetaData(const Common::Path& path);
 	};
 }
