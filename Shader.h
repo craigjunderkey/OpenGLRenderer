@@ -1,7 +1,8 @@
 #pragma once
-#include "Types.h"
 #include <string>
 #include <GL/glew.h>
+#include "Types.h"
+#include "Path.h"
 
 namespace Graphics
 {
@@ -20,7 +21,8 @@ namespace Graphics
 
 		Shader(const char* source, Type type);
 		Shader(Shader&& other) noexcept;
-		static Shader fromFile(const std::string& filePath, Type type);
+		static Shader fromFile(const char* filePath, Type type);
+		static Shader fromFile(const Common::Path& filePath, Type type);
 		u32 id() const { return this->id_; }
 		~Shader();
 

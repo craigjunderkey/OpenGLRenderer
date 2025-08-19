@@ -15,7 +15,7 @@ TextureAtlas TextureUnpacker::importAtlas(const char* moduleName, Graphics::Text
 {
 	// TODO: retrieve file from source field
 	Texture texture = Texture::fromFile(
-		FileManager::getAtlasImagePath(moduleName).path().data(), textureUnit);
+		FileManager::getAtlasImagePath(moduleName), textureUnit);
 
 	// parse atlas json
 	std::ifstream metaDataFile = std::ifstream(FileManager::getAtlasMetaDataPath(moduleName).path().data());

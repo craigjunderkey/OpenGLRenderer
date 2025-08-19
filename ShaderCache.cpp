@@ -45,7 +45,7 @@ i32 ShaderCache::getShaderIndex(const std::string& name) const
 i32 ShaderCache::cacheShader(const Path& path)
 {
 	ShaderMetaData meta = getMetaData(path);
-	Shader shader = Shader::fromFile(path.path().data(), meta.type);
+	Shader shader = Shader::fromFile(path, meta.type);
 	GlErrorChecker::checkShader(shader).report();
 
 	i32 index = shaders_.size();

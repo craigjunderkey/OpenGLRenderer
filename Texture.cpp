@@ -61,3 +61,8 @@ Texture Texture::fromFile(const char* filePath, Unit textureIndex)
 	Texture texture = Texture(image.data, image.width, image.height, GlImageFormat::Rgba, textureIndex);
 	return texture;
 }
+
+Texture Texture::fromFile(const Path& filePath, Unit textureIndex)
+{
+	return fromFile(filePath.path().data(), textureIndex);
+}

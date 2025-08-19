@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "Point.h"
 #include "GlImageFormat.h"
+#include "Path.h"
 
 namespace Graphics
 {
@@ -25,6 +26,7 @@ namespace Graphics
 		u32 unit() const { return this->unit_; }
 
 		static Texture fromFile(const char* filePath, Unit textureIndex);
+		static Texture fromFile(const Common::Path& filePath, Unit textureIndex);
 
 	private:
 		u32 id_;

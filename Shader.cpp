@@ -21,7 +21,7 @@ Shader::Shader(Shader&& other) noexcept
 	other.id_ = NO_SHADER;
 }
 
-Shader Shader::fromFile(const std::string& filePath, Type type)
+Shader Shader::fromFile(const char* filePath, Type type)
 {
 	std::ifstream file;
 	std::string source;
@@ -38,12 +38,17 @@ Shader Shader::fromFile(const std::string& filePath, Type type)
 	}
 	catch (std::ifstream::failure e)
 	{
-		ErrorReporter::panic("Failed to load shader " + filePath + ".");
+		ErrorReporter::panic("Failed to load shader " + std::string(filePath) + ".");
 	}
 
 	Shader shader = Shader(source.c_str(), type);
 	
 	return shader;
+}
+
+Shader Shader::fromFile(const Path& path, Type type)
+{
+	return fromFile(path.path().data(), type);
 }
 
 Shader::~Shader()
