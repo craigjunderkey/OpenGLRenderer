@@ -19,6 +19,7 @@
 #include "ContentManager.h"
 #include "UniformCommandBlock.h"
 #include "Locator.h"
+#include "StringId.h"
 
 using namespace Graphics;
 using namespace Common;
@@ -52,7 +53,7 @@ int main()
 	// create render context
 	RenderContext renderContext = RenderContext(window, contentManager, 800, 600);
 	renderContext.setScreenEffect("virtual_screen");
-	
+
 	renderContext.addScene3D();
 	Scene3D& scene3D = (Scene3D&)renderContext.getScene(0);
 	

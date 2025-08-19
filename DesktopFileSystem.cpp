@@ -33,9 +33,8 @@ std::vector<Path> DesktopFileSystem::getFilesInDirectory(const Path& directory, 
 
 	for (const auto& entry : std::filesystem::recursive_directory_iterator(directory.path().data()))
 	{
-		std::cout << entry.path().generic_string().data() << std::endl;
 		Path path = Path(entry.path().generic_string().data());
-		
+
 		if (path.extensionMatches(extension))
 			filePaths.push_back(std::move(path));
 	}

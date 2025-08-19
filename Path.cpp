@@ -57,7 +57,7 @@ String Path::makeFormattedPath(const char* path)
 
 String Path::name() const
 {
-	const char* nameStart = path_.findFirst('/');
+	const char* nameStart = path_.findLast('/');
 	const char* nameEnd = path_.findLast('.');
 
 	if (nameStart == nullptr)
@@ -69,6 +69,7 @@ String Path::name() const
 		nameEnd = path_.data() + path_.length();
 
 	i32 size = nameEnd - nameStart;
+	
 	return path_.makeSubstringFromAddress(nameStart, size);
 }
 
@@ -108,7 +109,11 @@ bool Path::hasExtension() const
 bool Path::extensionMatches(const char* extension) const
 {
 	const char* start = path_.findLast('.');
-	assert(start != nullptr);
+	
+	bool hasExtension = start != nullptr;
+	if (!hasExtension)
+		return false;
+
 	start++;
 	return strcmp(start, extension) == 0;
 }
@@ -129,7 +134,11 @@ String Path::fullExtension() const
 bool Path::fullExtensionMatches(const char* fullExtension) const
 {
 	const char* start = path_.findFirst('.');
-	assert(start != nullptr);
+	
+	bool hasExtension = start != nullptr;
+	if (!hasExtension)
+		return false;
+	
 	start++;
 	return strcmp(start, fullExtension) == 0;
 }
