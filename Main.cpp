@@ -105,6 +105,8 @@ int main()
 			.setFlag(SpriteDrawInfo::Flag::FlipH);
 		spriteBatch.draw("tallbaby", vec2(168, 64), info);
 
+		spriteBatch.draw("ding", vec2(18, 114));
+
 		renderContext.render();
 
 		glfwPollEvents();
