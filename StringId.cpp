@@ -1,5 +1,5 @@
 #include "StringId.h"
-#include "compile_time_crc.hpp"
+#include "CompileTimeCrc.h"
 #include "StringIdTable.h"
 
 using namespace Common;
