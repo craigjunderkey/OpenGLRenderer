@@ -138,10 +138,26 @@ namespace Common
 			this->size_++;
 		}
 
-		V* get(StringId stringId) const
+		V* get(StringId stringId)
 		{
 			SearchResult result = find(stringId);
 			return result.item;
+		}
+
+		const V* get(StringId stringId) const
+		{
+			SearchResult result = find(stringId);
+			return result.item;
+		}
+
+		inline V& at(StringId stringId)
+		{
+			return *get(stringId);
+		}
+
+		inline const V& at(StringId stringId) const
+		{
+			return *get(stringId);
 		}
 
 		void remove(StringId stringId)
