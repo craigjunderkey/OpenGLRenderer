@@ -19,7 +19,7 @@ namespace Graphics
 
 	private:
 		static const u32 NO_PROGRAM = 0;
-		
+
 		u32 id_;
 		UniformManager uniforms_;
 	};

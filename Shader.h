@@ -9,6 +9,8 @@ namespace Graphics
 	class Shader : public Resources::Resource
 	{
 	public:
+		static const u32 NO_SHADER = 0;
+		
 		enum class Type
 		{
 			Vertex = GL_VERTEX_SHADER,
@@ -29,8 +31,6 @@ namespace Graphics
 		void initResource() override {}
 
 	private:
-		static const u32 NO_SHADER = 0;
-
 		u32 id_;
 	};
 }

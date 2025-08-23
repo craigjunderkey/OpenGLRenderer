@@ -4,10 +4,11 @@
 #include "Point.h"
 #include "GlImageFormat.h"
 #include "Path.h"
+#include "Resource.h"
 
 namespace Graphics
 {
-	class Texture
+	class Texture : public Resources::Resource
 	{
 	public:
 		enum Unit
@@ -16,7 +17,7 @@ namespace Graphics
 			MeshTextureAtlas = 1,
 			Attachment = 2
 		};
-		
+
 		Texture(const u8* imageData, u32 imageWidth, u32 imageHeight, GlImageFormat format, Unit textureUnit);
 		Texture(Texture&& other) noexcept;
 		~Texture();
@@ -27,6 +28,8 @@ namespace Graphics
 
 		static Texture fromFile(const char* filePath, Unit textureIndex);
 		static Texture fromFile(const Common::Path& filePath, Unit textureIndex);
+
+		void initResource() override {}
 
 	private:
 		u32 id_;

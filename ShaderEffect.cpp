@@ -1,3 +1,5 @@
+#pragma warning( disable : 6011 )
+
 #include "ShaderEffect.h"
 #include "ErrorReporter.h"
 #include "GlErrorChecker.h"
@@ -6,43 +8,55 @@ using namespace Graphics;
 using namespace AssetManagement;
 using namespace Common;
 
-// TODO: postpone construction of the ShaderProgram to initResource;
-//		 take StringIds for effect info
+ShaderEffect::ShaderEffect(ShaderIdBlock shaders)
+	: shaders_(shaders), program_(ShaderProgram())
+{
+}
 
-ShaderEffect::ShaderEffect(const ShaderCache& cache, i32 vertex, i32 geometry, i32 fragment, i32 tessControl, i32 tessEval)
+void ShaderEffect::link(ShaderPtrBlock* pointers)
+{
+	if (pointers->compute != nullptr)
+	{
+		linkStandardEffect(pointers);
+	}
+	else
+	{
+		linkComputeEffect(pointers);
+	}
+}
+
+void ShaderEffect::linkStandardEffect(ShaderPtrBlock* ptrs)
 {
 	// vertex
-	ErrorReporter::panicElse(vertex != ShaderCache::NO_SHADER, "Shader effect requires a vertex shader.");
-	this->program_.attachShader(cache.getShader(vertex));
+	ErrorReporter::panicElse(ptrs->vertex, "Shader effect requires a vertex shader.");
+	this->program_.attachShader(*ptrs->vertex);
 
 	// tessellation
-	if (tessControl != ShaderCache::NO_SHADER || tessEval != ShaderCache::NO_SHADER)
+	if (ptrs->tessControl || ptrs->tessEval)
 	{
-		ErrorReporter::panicElse(tessControl == ShaderCache::NO_SHADER
-			|| tessEval == ShaderCache::NO_SHADER,
-			"Shader effect has one tesselation stage but not both.");
-		
-		this->program_.attachShader(cache.getShader(tessControl));
-		this->program_.attachShader(cache.getShader(tessEval));
+		ErrorReporter::panicElse(!ptrs->tessControl || !ptrs->tessEval,
+			"Shader effect has one tessellation stage but not both.");
+
+		this->program_.attachShader(*ptrs->tessControl);
+		this->program_.attachShader(*ptrs->tessEval);
 	}
 
 	// geometry
-	if (geometry != ShaderCache::NO_SHADER)
-		this->program_.attachShader(cache.getShader(geometry));
+	if (ptrs->geometry)
+		this->program_.attachShader(*ptrs->geometry);
 
-	// fragment shader
-	if (fragment != ShaderCache::NO_SHADER)
-		this->program_.attachShader(cache.getShader(fragment));
-
-	// link and report
-	this->program_.link();
-	GlErrorChecker::checkProgram(this->program_).report();
+	// fragment
+	if (ptrs->fragment)
+		this->program_.attachShader(*ptrs->fragment);
 }
 
-ShaderEffect::ShaderEffect(const ShaderCache& cache, i32 compute)
+void ShaderEffect::linkComputeEffect(ShaderPtrBlock* ptrs)
 {
-	assert(compute != ShaderCache::NO_SHADER); // if this gets through, then it's my fault
-	this->program_.attachShader(cache.getShader(compute));
+	this->program_.attachShader(*ptrs->compute);
+}
+
+void ShaderEffect::initResource()
+{
 	this->program_.link();
 	GlErrorChecker::checkProgram(this->program_).report();
 }
