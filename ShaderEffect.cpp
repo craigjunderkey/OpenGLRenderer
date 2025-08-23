@@ -6,6 +6,9 @@ using namespace Graphics;
 using namespace AssetManagement;
 using namespace Common;
 
+// TODO: postpone construction of the ShaderProgram to initResource;
+//		 take StringIds for effect info
+
 ShaderEffect::ShaderEffect(const ShaderCache& cache, i32 vertex, i32 geometry, i32 fragment, i32 tessControl, i32 tessEval)
 {
 	// vertex

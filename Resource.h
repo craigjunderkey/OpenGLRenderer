@@ -1,11 +1,14 @@
 #pragma once
+#include "Types.h"
 
 namespace Resources
 {
 	class Resource
 	{
-		virtual void init() = 0;
-		virtual void destroy() = 0;
+	public:
+		virtual void initResource() = 0;
+		virtual void destroyResource() {};
 		virtual ~Resource() = default;
+		u32 refCount = 0;
 	};
 }

@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
 #include <GL/glew.h>
 #include "Types.h"
 #include "Path.h"
+#include "Resource.h"
 
 namespace Graphics
 {
-	class Shader
+	class Shader : public Resources::Resource
 	{
 	public:
 		enum class Type
@@ -25,6 +25,8 @@ namespace Graphics
 		static Shader fromFile(const Common::Path& filePath, Type type);
 		u32 id() const { return this->id_; }
 		~Shader();
+
+		void initResource() override {}
 
 	private:
 		static const u32 NO_SHADER = 0;

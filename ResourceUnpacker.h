@@ -6,6 +6,7 @@ namespace Resources
 {
 	class ResourceUnpacker
 	{
+	public:
 		virtual Resource unpack(Common::Path pack) = 0;
 		virtual ~ResourceUnpacker() = default;
 	};

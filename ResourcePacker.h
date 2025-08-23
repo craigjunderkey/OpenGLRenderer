@@ -5,7 +5,7 @@ namespace Resources
 {
 	class ResourcePacker
 	{
-		virtual void addFile(Common::Path path) = 0;
+	public:
 		virtual void pack() = 0;
 		virtual ~ResourcePacker() = default;
 	};

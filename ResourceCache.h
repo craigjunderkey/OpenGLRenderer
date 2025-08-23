@@ -16,9 +16,9 @@ namespace Resources
 			static_assert(std::is_base_of<Resource, T>::value);
 		}
 
-		const T& get(StringId resouceId) const
+		const T& get(StringId resourceId) const
 		{
-			return *cache_.get(resourceId);
+			return *this->cache_.get(resourceId);
 		}
 
 		void add(StringId resourceId, T resource)

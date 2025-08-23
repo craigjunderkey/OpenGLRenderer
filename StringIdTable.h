@@ -138,7 +138,7 @@ namespace Common
 			this->size_++;
 		}
 
-		V* get(StringId stringId)
+		V* get(StringId stringId) const
 		{
 			SearchResult result = find(stringId);
 			return result.item;
@@ -155,7 +155,7 @@ namespace Common
 			this->size_--;
 		}
 
-		bool contains(StringId stringId)
+		bool contains(StringId stringId) const
 		{
 			return !find(stringId).isEmpty();
 		}
