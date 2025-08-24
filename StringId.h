@@ -16,6 +16,9 @@ struct StringId
 
 	// formal check for NONE value
 	constexpr bool isValid() const noexcept { return this->id != NONE; }
+
+	// cast to pointer for when a StringId is temporarily stored in a pointer
+	constexpr uintptr_t toPtr() const noexcept { return (uintptr_t)this->id; }
 };
 
 constexpr u32 hashCrc32(const char* string);

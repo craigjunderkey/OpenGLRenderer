@@ -1,29 +1,28 @@
 #pragma once
-#include <string>
-#include <unordered_map>
-#include <vector>
 #include "Texture.h"
 #include "Texture2D.h"
+#include "Resource.h"
+#include "StringIdTable.h"
 
 namespace AssetManagement
 {
-	class TextureAtlas
+	class TextureAtlas : Resources::Resource
 	{
 		friend class TexturePacker;
 		friend class TextureUnpacker;
 
 	public:
-		TextureAtlas(const char* fileName, Graphics::Texture::Unit textureUnit, u32 numTextures);
-		TextureAtlas(Graphics::Texture&& source, u32 numTextures);
-		TextureAtlas(TextureAtlas&& other) noexcept;
-		const Graphics::Texture& source() const { return this->source_; }
-		const Graphics::Texture2D& get(std::string textureName) const;
+		TextureAtlas(StringId source, u32 capacity);
+		
+		const Graphics::Texture& source() const { return *this->source_; }
+		const Graphics::Texture2D& get(StringId textureId) const;
+
+		void initResource() override {};
 
 	private:
-		Graphics::Texture source_;
-		std::vector<Graphics::Texture2D> textures_;
-		std::unordered_map<std::string, u32> textureMap_;
+		Graphics::Texture* source_;
+		Common::StringIdTable<Graphics::Texture2D> textures_;
 
-		void addTexture(std::string textureName, Graphics::Texture2D texture);
+		void addTexture(StringId textureId, Graphics::Texture2D texture);
 	};
 }

@@ -152,12 +152,16 @@ namespace Common
 
 		inline V& at(StringId stringId)
 		{
-			return *get(stringId);
+			V* value = get(stringId);
+			assert(value != nullptr);
+			return *value;
 		}
 
 		inline const V& at(StringId stringId) const
 		{
-			return *get(stringId);
+			const V* value = get(stringId);
+			assert(value != nullptr);
+			return *value;
 		}
 
 		void remove(StringId stringId)

@@ -5,44 +5,28 @@ using namespace Graphics;
 using namespace Common;
 using namespace AssetManagement;
 
-TextureAtlas::TextureAtlas(const char* fileName, Texture::Unit textureUnit, u32 numTextures)
-	: source_(Texture::fromFile(fileName, textureUnit))
-{
-	this->textures_.reserve(numTextures);
-	this->textureMap_.reserve(numTextures);
-}
-
-TextureAtlas::TextureAtlas(Graphics::Texture&& source, u32 numTextures)
-	: source_(std::move(source))
-{
-	this->textures_.reserve(numTextures);
-	this->textureMap_.reserve(numTextures);
-}
-
-TextureAtlas::TextureAtlas(TextureAtlas&& other) noexcept
-	: source_(std::move(other.source_)),
-	textures_(std::move(other.textures_)),
-	textureMap_(std::move(other.textureMap_))
+TextureAtlas::TextureAtlas(StringId source, u32 capacity)
+	: source_((Graphics::Texture*)source.toPtr()),
+	textures_(StringIdTable<Texture2D>(capacity))
 {
 }
 
-const Texture2D& TextureAtlas::get(std::string textureName) const
+const Texture2D& TextureAtlas::get(StringId textureId) const
 {
-	auto it = this->textureMap_.find(textureName);
+	const Texture2D* tex = this->textures_.get(textureId);
 
-	if (it != this->textureMap_.end())
+	if (tex != nullptr)
 	{
-		return this->textures_[it->second];
+		return *tex;
 	}
 	else
 	{
-		ErrorReporter::panic("Tried to retrieve but couldn't find " + textureName + ".");
+		ErrorReporter::panic("Tried to retrieve but couldn't find "
+			+ std::string(lookupString(textureId)) + ".");
 	}
 }
 
-void TextureAtlas::addTexture(std::string textureName, Texture2D texture)
+void TextureAtlas::addTexture(StringId textureId, Texture2D texture)
 {
-	u32 textureIndex = this->textures_.size();
-	this->textures_.push_back(std::move(texture));
-	this->textureMap_.insert({std::move(textureName), textureIndex});
+	this->textures_.add(textureId, std::move(texture));
 }
