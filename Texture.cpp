@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "ErrorReporter.h"
 #include "Image.h"
+#include "ImageReader.h"
 
 using namespace Graphics;
 using namespace Common;
@@ -55,9 +56,9 @@ void Texture::activateUnit() const
 	glActiveTexture(GL_TEXTURE0 + (u32)this->unit_);
 }
 
-Texture Texture::fromFile(const char* filePath, Unit textureIndex)
+Texture Texture::fromFile(const Common::Path& filePath, Unit textureIndex)
 {
-	Image image = Image(filePath, Image::Format::Rgba, true);
+	Image image = ImageReader::read(filePath, Image::Format::Rgba, true);
 	Texture texture = Texture(image.data, image.width, image.height, GlImageFormat::Rgba, textureIndex);
 	return texture;
 }

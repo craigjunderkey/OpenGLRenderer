@@ -6,17 +6,6 @@
 
 using namespace Common;
 
-Image::Image(const char* filePath, Format format, bool flipVertically) : format(format)
-{
-	stbi_set_flip_vertically_on_load(flipVertically);
-	
-	i32 numChannels;
-	this->data = stbi_load(filePath, &this->width, &this->height, &numChannels, (i32)format);
-
-	ErrorReporter::panicElse(this->data != NULL,
-		"Failed to load image " + std::string(filePath) + ".");
-}
-
 Image::Image(u8* data, i32 width, i32 height, Format format)
 	: data(data), width(width), height(height), format(format)
 {
@@ -33,5 +22,5 @@ Image::Image(Image&& other) noexcept
 Image::~Image()
 {
 	if (this->data != nullptr)
-		stbi_image_free(this->data);
+		delete this->data;
 }

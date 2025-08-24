@@ -12,7 +12,6 @@ namespace Common
 			Rgba = 4
 		};
 
-		Image(const char* filePath, Format format, bool flipVertically);
 		Image(u8* data, i32 width, i32 height, Format format);
 		Image(Image&& other) noexcept;
 		Image() {}
