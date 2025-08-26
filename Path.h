@@ -12,7 +12,7 @@ namespace Common
 	class Path
 	{
 	public:
-		Path(const char* path);
+		explicit Path(const char* path);
 		Path();
 		
 		Path(Path&& other) noexcept;

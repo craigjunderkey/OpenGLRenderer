@@ -12,7 +12,7 @@ namespace Resources
 	class ResourceRegistry
 	{
 	public:
-		struct RegistryDescription
+		struct Description
 		{
 			u32 numShaders;
 			u32 numFx;
@@ -20,7 +20,7 @@ namespace Resources
 			u32 numAtlases;
 		};
 		
-		ResourceRegistry(RegistryDescription description)
+		ResourceRegistry(Description description)
 			: shaders_(description.numShaders),
 			fx_(description.numFx),
 			textures_(description.numTextures),
