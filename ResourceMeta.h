@@ -11,7 +11,8 @@ namespace Resources
 		Texture,
 		TextureAtlas,
 		Shader,
-		ShaderEffect
+		ShaderEffect,
+		PackageDefinition
 	};
 
 	struct ResourceDescription
@@ -30,20 +31,6 @@ namespace Resources
 		ResourceLinker* linker = nullptr;
 	};
 
-	//struct DirectoryDescription
-	//{
-	//	const char* directory;
-	//	ResourceDescription* resource;
-	//};
-
-	//enum class DirectoryType
-	//{
-	//	Textures,
-	//	TextureAtlases,
-	//	Shaders,
-	//	ShaderEffects
-	//};
-	
 	class ResourceMeta
 	{
 	public:
@@ -51,14 +38,54 @@ namespace Resources
 
 		static void initialize()
 		{
-			resources_[(u32)ResourceType::Texture] = ResourceDescription();
-			resources_[(u32)ResourceType::TextureAtlas] = ResourceDescription();
-			resources_[(u32)ResourceType::Shader] = ResourceDescription();
-			resources_[(u32)ResourceType::ShaderEffect] = ResourceDescription();
+			// TEXTURE
+			resources_[(u32)ResourceType::Texture] = ResourceDescription(
+				"Texture",
+				"Textures",
+				nullptr, // compiler (copier)!
+				nullptr, // loader!
+				nullptr  // null linker!
+			);
+			
+			// TEXTURE ATLAS
+			resources_[(u32)ResourceType::TextureAtlas] = ResourceDescription(
+				"Texture Atlas",
+				"TextureAtlases",
+				nullptr, // compiler (texture packer)!
+				nullptr, // loader!
+				nullptr  // linker!
+			);
+			
+			// SHADER
+			resources_[(u32)ResourceType::Shader] = ResourceDescription(
+				"Shader",
+				"Shaders",
+				nullptr, // compiler (copier)!
+				nullptr, // loader!
+				nullptr  // null linker!
+			);
+			
+			// SHADER EFFECT
+			resources_[(u32)ResourceType::ShaderEffect] = ResourceDescription(
+				"Shader Effect",
+				"ShaderEffects",
+				nullptr, // compiler (copier)!
+				nullptr, // loader!
+				nullptr  // linker!
+			);
+			
+			// PACKAGE DEFINITION
+			resources_[(u32)ResourceType::PackageDefinition] = ResourceDescription(
+				"Package Definition",
+				"PackageDefinitions",
+				nullptr, // compiler (copier)!
+				nullptr, // loader!
+				nullptr  // null linker!
+			);
 		}
 
 	private:
-		static const u32 NUM_RESOURCES = 4;
+		static const u32 NUM_RESOURCES = 5;
 
 		static ResourceDescription resources_[NUM_RESOURCES];
 	};
