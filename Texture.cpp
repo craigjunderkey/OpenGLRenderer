@@ -56,14 +56,9 @@ void Texture::activateUnit() const
 	glActiveTexture(GL_TEXTURE0 + (u32)this->unit_);
 }
 
-Texture Texture::fromFile(const Common::Path& filePath, Unit textureIndex)
+Texture Texture::fromFile(const Path& filePath, Unit textureIndex)
 {
 	Image image = ImageReader::read(filePath, Image::Format::Rgba, true);
 	Texture texture = Texture(image.data, image.width, image.height, GlImageFormat::Rgba, textureIndex);
 	return texture;
-}
-
-Texture Texture::fromFile(const Path& filePath, Unit textureIndex)
-{
-	return fromFile(filePath.path().data(), textureIndex);
 }

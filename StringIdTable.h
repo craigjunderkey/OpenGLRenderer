@@ -76,7 +76,7 @@ namespace Common
 		BucketMetadata* control_;
 
 		// private methods zone
-		SearchResult find(StringId stringId)
+		SearchResult find(StringId stringId) const
 		{
 			u32 index = stringId % this->capacity_;
 			i32 offset = 1;

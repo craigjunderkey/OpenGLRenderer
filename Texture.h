@@ -26,7 +26,6 @@ namespace Graphics
 		u32 id() const { return this->id_; }
 		u32 unit() const { return this->unit_; }
 
-		static Texture fromFile(const char* filePath, Unit textureIndex);
 		static Texture fromFile(const Common::Path& filePath, Unit textureIndex);
 
 		void initResource() override {}
