@@ -7,16 +7,16 @@ namespace Resources
 	class PackageDefinition : public Resource
 	{
 	public:
-		PackageDefinition(const char* archivePath)
-			: archivePath_(Common::Path(archivePath)),
+		PackageDefinition(String archiveFileName)
+			: archiveFileName_(std::move(archiveFileName)),
 			isLoaded_(false)
 		{}
 		
-		const Common::Path& archivePath() const { return this->archivePath_; }
+		const String& archiveFileName() const { return this->archiveFileName_; }
 		void initResource() override {}
 		
 	private:
-		Common::Path archivePath_;
+		String archiveFileName_;
 		bool isLoaded_;
 	};
 }

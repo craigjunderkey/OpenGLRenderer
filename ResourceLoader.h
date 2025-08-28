@@ -9,7 +9,7 @@ namespace Resources
 	{
 	public:
 		// TODO: add a memory allocator 'destination'
-		virtual Resource* load(Common::Path source) const = 0;
+		virtual Resource* load(const Common::Path& source) const = 0;
 		
 		virtual std::unique_ptr<ResourceLoader> newInstance() const = 0;
 		virtual ~ResourceLoader() = default;
