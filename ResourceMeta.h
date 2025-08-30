@@ -34,6 +34,8 @@ namespace Resources
 	class ResourceMeta
 	{
 	public:
+		static const u32 NUM_RESOURCES = 5;
+		
 		ResourceMeta() = delete;
 
 		static void initialize()
@@ -85,8 +87,6 @@ namespace Resources
 		}
 
 	private:
-		static const u32 NUM_RESOURCES = 5;
-
 		static ResourceDescription resources_[NUM_RESOURCES];
 	};
 }
