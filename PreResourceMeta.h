@@ -63,6 +63,16 @@ namespace Resources
 			);
 		}
 
+		static const PreResourceDescription* getPreResources()
+		{
+			return preResources_;
+		}
+
+		static const PreResourceDescription* getPreResource(PreResourceType type)
+		{
+			return &preResources_[(u32)type];
+		}
+
 	private:
 		static PreResourceDescription preResources_[NUM_PRE_RESOURCES];
 	};
