@@ -12,6 +12,14 @@ namespace Resources
 		PackageDefinition
 	};
 
+	enum class PackablePreResource
+	{
+		SpriteTexture = PreResourceType::SpriteTexture,
+		MeshTexture = PreResourceType::MeshTexture,
+		Shader = PreResourceType::Shader,
+		ShaderEffect = PreResourceType::ShaderEffect
+	};
+
 	struct PreResourceDescription
 	{
 		PreResourceDescription() {}
@@ -32,6 +40,7 @@ namespace Resources
 	{
 	public:
 		static const u32 NUM_PRE_RESOURCES = 5;
+		static const u32 NUM_PACKABLE_PRE_RESOURCES = 4;
 
 		PreResourceMeta() = delete;
 
