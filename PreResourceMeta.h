@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include "Types.h"
 
 namespace Resources
@@ -12,18 +13,23 @@ namespace Resources
 		PackageDefinition
 	};
 
-	enum class PackablePreResource
+	bool isPackable(PreResourceType preResource)
 	{
-		SpriteTexture = PreResourceType::SpriteTexture,
-		MeshTexture = PreResourceType::MeshTexture,
-		Shader = PreResourceType::Shader,
-		ShaderEffect = PreResourceType::ShaderEffect
-	};
+		bool isPackable = true;
+		
+		if (preResource == PreResourceType::PackageDefinition)
+		{
+			isPackable = false;
+		}
+
+		return isPackable;
+	}
 
 	struct PreResourceDescription
 	{
-		PreResourceDescription() {}
-		PreResourceDescription(const char* name, const char* pkgModule, const char* ext1, const char* ext2 = nullptr)
+		//PreResourceDescription() {}
+		PreResourceDescription(PreResourceType type, const char* name,
+			const char* pkgModule, const char* ext1, const char* ext2 = nullptr)
 		{
 			this->name = name;
 			this->pkgModule = pkgModule;
@@ -34,6 +40,7 @@ namespace Resources
 		const char* name = nullptr;
 		const char* pkgModule = nullptr;
 		const char* extension[2] = {nullptr};
+		PreResourceType type;
 	};
 
 	class PreResourceMeta
@@ -48,33 +55,28 @@ namespace Resources
 		{
 			// SPRITE TEXTURE
 			preResources_[(u32)PreResourceType::SpriteTexture] = PreResourceDescription(
-				"Sprite Texture", "SpriteTextures", "png", "ase"
+				PreResourceType::SpriteTexture, "Sprite Texture", "SpriteTextures", "png", "ase"
 			);
 
 			// MESH TEXTURE
 			preResources_[(u32)PreResourceType::MeshTexture] = PreResourceDescription(
-				"Mesh Texture", "MeshTextures", "png", "ase"
+				PreResourceType::MeshTexture, "Mesh Texture", "MeshTextures", "png", "ase"
 			);
 
 			// SHADER
 			preResources_[(u32)PreResourceType::Shader] = PreResourceDescription(
-				"Shader", "Shaders", "glsl"
+				PreResourceType::Shader, "Shader", "Shaders", "glsl"
 			);
 
 			// SHADER EFFECT
 			preResources_[(u32)PreResourceType::ShaderEffect] = PreResourceDescription(
-				"Shader Effect", "ShaderEffects", "effect"
+				PreResourceType::ShaderEffect, "Shader Effect", "ShaderEffects", "effect"
 			);
 
 			// PACKAGE DEFINITION
 			preResources_[(u32)PreResourceType::PackageDefinition] = PreResourceDescription(
-				"Package Definition", "PackageDefinitions", "pack"
+				PreResourceType::PackageDefinition, "Package Definition", "PackageDefinitions", "pack"
 			);
-		}
-
-		static const PreResourceDescription* getPreResources()
-		{
-			return preResources_;
 		}
 
 		static const PreResourceDescription* getPreResource(PreResourceType type)
@@ -83,6 +85,10 @@ namespace Resources
 		}
 
 	private:
-		static PreResourceDescription preResources_[NUM_PRE_RESOURCES];
+		using PreResourceArray = std::array<PreResourceDescription, NUM_PRE_RESOURCES>;
+		static PreResourceArray preResources_;
+
+	public:
+		static const PreResourceArray& getPreResources() { return preResources_; }
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <array>
 #include "PreResourceMeta.h"
 #include "Path.h"
 #include "Types.h"
@@ -17,6 +18,11 @@ namespace Resources
 	private:
 		void fillMap(i32 index, const PreResourceDescription& preResource);
 
-		std::unordered_map<std::string, Common::Path> modules_[PreResourceMeta::NUM_PRE_RESOURCES];
+		using FileMapRep = std::array<std::unordered_map<std::string, Common::Path>, PreResourceMeta::NUM_PRE_RESOURCES>;
+		FileMapRep modules_;
+
+	public:
+		FileMapRep::const_iterator begin() const { return this->modules_.begin(); }
+		FileMapRep::const_iterator end() const { return this->modules_.end(); }
 	};
 }

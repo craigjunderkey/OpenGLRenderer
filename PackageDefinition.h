@@ -12,8 +12,9 @@ namespace Resources
 		{
 		}
 		
-		void addFile(PackablePreResource type, std::string name)
+		void addFile(PreResourceType type, std::string name)
 		{
+			assert(isPackable(type));
 			modules[(u32)(PreResourceType)type].push_back(std::move(name));
 		}
 
