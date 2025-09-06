@@ -39,18 +39,19 @@ const std::unordered_map<std::string, Path>& PreResourceFileMap::getMap(PreResou
 	return this->modules_[(u32)type];
 }
 
-const Path& PreResourceFileMap::getPath(PreResourceType type, const std::string& name) const
+const Path* PreResourceFileMap::getPath(PreResourceType type, const std::string& name) const
 {
 	const std::unordered_map<std::string, Path>& map = this->modules_[(u32)type];
 	auto it = map.find(name);
 
 	if (it != map.end())
 	{
-		return (*it).second;
+		return &(*it).second;
 	}
 	else
 	{
 		const char* preResourceType = PreResourceMeta::getPreResource(type)->name;
-		ErrorReporter::panic("Could not find " + name + " named " + name + ".");
+		ErrorReporter::warn("Could not find " + name + " named " + name + ".");
+		return nullptr;
 	}
 }

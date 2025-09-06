@@ -13,7 +13,7 @@ namespace Resources
 	public:
 		PreResourceFileMap();
 		const std::unordered_map<std::string, Common::Path>& getMap(PreResourceType type) const;
-		const Common::Path& getPath(PreResourceType type, const std::string& name) const;
+		const Common::Path* getPath(PreResourceType type, const std::string& name) const;
 
 	private:
 		void fillMap(i32 index, const PreResourceDescription& preResource);

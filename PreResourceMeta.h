@@ -84,6 +84,18 @@ namespace Resources
 			return &preResources_[(u32)type];
 		}
 
+		static const PreResourceDescription* getPreResource(const char* pkgModule)
+		{
+			for (const PreResourceDescription& preResource : preResources_)
+			{
+				bool modulesMatch = strcmp(pkgModule, preResource.pkgModule) == 0;
+				if (modulesMatch)
+					return &preResource;
+			}
+
+			return nullptr;
+		}
+
 	private:
 		using PreResourceArray = std::array<PreResourceDescription, NUM_PRE_RESOURCES>;
 		static PreResourceArray preResources_;
