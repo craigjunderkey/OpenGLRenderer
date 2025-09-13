@@ -46,3 +46,13 @@ bool DesktopFileSystem::fileExists(const Path& file)
 {
 	return std::filesystem::exists(file.path().data());
 }
+
+void DesktopFileSystem::createDirectory(const Path& directory)
+{
+	std::filesystem::create_directory(directory.path().data());
+}
+
+void DesktopFileSystem::destroyDirectory(const Path& directory)
+{
+	std::filesystem::remove_all(directory.path().data());
+}

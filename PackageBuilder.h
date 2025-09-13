@@ -9,6 +9,7 @@ namespace Resources
 	{
 	public:
 		PackageBuilder(const PreResourceFileMap& fileMap, const Common::Path& outputDirectory);
+		~PackageBuilder();
 		void build(const Common::Path& definition);
 		void buildUniversal();
 	
@@ -17,5 +18,8 @@ namespace Resources
 
 		const PreResourceFileMap& fileMap_;
 		const Common::Path& outputDirectory_;
+		Common::Path stagingDirectory_;
+
+		const char* STAGING_DIRECTORY = "StagingArea";
 	};
 }

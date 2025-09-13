@@ -6,6 +6,7 @@
 #include "PackageBuilder.h"
 #include "types.h"
 #include "ErrorReporter.h"
+#include "Locator.h"
 
 using namespace Resources;
 using namespace Common;
@@ -15,6 +16,17 @@ using json = nlohmann::json;
 PackageBuilder::PackageBuilder(const PreResourceFileMap& fileMap, const Path& outputDirectory)
 	: fileMap_(fileMap), outputDirectory_(outputDirectory)
 {
+	// create staging directory path
+	String pathName = String::concatenate(outputDirectory.path().data(), STAGING_DIRECTORY);
+	this->stagingDirectory_ = Path(pathName.data());
+	
+	// create the directory itself
+	Locator::fileSystem().createDirectory(this->stagingDirectory_);
+}
+
+PackageBuilder::~PackageBuilder()
+{
+	Locator::fileSystem().destroyDirectory(this->stagingDirectory_);
 }
 
 void PackageBuilder::build(const Path& definition)
