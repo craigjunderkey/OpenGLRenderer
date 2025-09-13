@@ -1,6 +1,7 @@
 #include <fstream>
 #include <array>
 #include <string>
+#include "zip.h"
 #include "json.hpp"
 #include "PackageBuilder.h"
 #include "types.h"
@@ -86,5 +87,5 @@ void PackageBuilder::buildUniversal()
 
 void PackageBuilder::build(const PackageDefinition& definition)
 {
-
+	
 }
