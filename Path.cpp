@@ -164,3 +164,9 @@ PathPattern Path::makePattern() const
 
 	return PathPattern(std::move(directory), std::move(extension));
 }
+
+Path Path::makeSubpath(const Path& path, const char* file)
+{
+	String pathName = String::concatenate(path.path().data(), "/") + file;
+	return Path(std::move(pathName));
+}

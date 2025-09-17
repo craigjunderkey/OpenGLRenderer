@@ -18,6 +18,7 @@ namespace Common
 		Path(Path&& other) noexcept;
 		Path& operator=(Path&& other) noexcept;
 		static Path makePreformatted(String&& path);
+		static Path makeSubpath(const Path& path, const char* file);
 
 		const String& path() const { return this->path_; }
 		

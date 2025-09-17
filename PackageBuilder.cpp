@@ -17,11 +17,21 @@ PackageBuilder::PackageBuilder(const PreResourceFileMap& fileMap, const Path& ou
 	: fileMap_(fileMap), outputDirectory_(outputDirectory)
 {
 	// create staging directory path
-	String pathName = String::concatenate(outputDirectory.path().data(), STAGING_DIRECTORY);
-	this->stagingDirectory_ = Path(pathName.data());
+	String stagingDirName = String::concatenate(outputDirectory.path().data(), STAGING_DIRECTORY);
+	this->stagingDirectory_ = Path(stagingDirName.data());
 	
 	// create the directory itself
 	Locator::fileSystem().createDirectory(this->stagingDirectory_);
+
+	// create a subdirectory for each packable pre-resource module
+	for (const PreResourceDescription& preResource : PreResourceMeta::getPreResources())
+	{
+		if (isPackable(preResource.type))
+		{
+			Path modulePath = Path::makeSubpath(this->stagingDirectory_, preResource.pkgModule);
+			Locator::fileSystem().createDirectory(modulePath);
+		}
+	}
 }
 
 PackageBuilder::~PackageBuilder()
@@ -99,5 +109,5 @@ void PackageBuilder::buildUniversal()
 
 void PackageBuilder::build(const PackageDefinition& definition)
 {
-	
+
 }
