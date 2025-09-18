@@ -25,6 +25,17 @@ namespace Resources
 		return isPackable;
 	}
 
+	/*
+	* Utility for any class who stores packable pre-resources
+	* in an array. Use this for indexing that array. Maps
+	* pre-resource types onto [0, |packable count|].
+	*/
+	u32 indexPackable(PreResourceType preResource)
+	{
+		assert(isPackable(preResource));
+		return (u32)preResource;
+	}
+
 	struct PreResourceDescription
 	{
 		//PreResourceDescription() {}
